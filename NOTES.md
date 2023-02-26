@@ -1,5 +1,16 @@
 # Notes
 
+## TL;DR
+
+- Using ETH as the quote token for a given PAPR vault setup causes similar issues to what RAI is currently experiencing
+- Meaning, from no arbitrage / interest rate parity arguments, should expect the funding rate on the associated PAPR vault
+to likely trend negative as the "risk-free" rate the vault needs to compete with (and compare to) is the ETH staking rate
+- Consider using wstETH or one of the other LSDs as the quote token to target PAPR rates against. This would make PAPR funding rates
+reflect the actual "premium" component (i.e. mark vs target price), since the "interest rate" component is built into the LSD token itself
+- Interestingly, a simple replication strategy shows passively holding the PAPR token for an NFT collection appears equivalent to
+playing the basis trade on a hypothetical perpetual market for that same NFT collection.
+
+
 ## Background
 
 
@@ -98,4 +109,6 @@ f'_papr = (f_perp - r) / LTV
 where `f = f' + r` in both PAPR and perp cases. `f'` can be interpreted as the mark "premium" component of the funding rate and `r` the interest
 rate component when using the BitMEX analogy.
 
-
+Interestingly, passively holding the PAPR token for an NFT collection appears equivalent to playing the basis trade on a hypothetical perp for
+that same NFT collection, through the replication strategy above. Therefore, price appreciation on the respective PAPR token should produce
+similar returns to that of the basis trade on a hypothetical NFT perp.
