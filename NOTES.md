@@ -87,7 +87,8 @@ using wstETH or one of its LSD equivalents as the quote/pairing token in the und
 implicitly incorporate the risk free rate in the no arb strategy above.
 
 Notice, if `f_perp` also incorporates the interest rate component, like on BitMEX, then when using the LSD, should expect PAPR funding rates to
-be the funding rate on the perp (adjusted for risk-free) divided by `LTV` if using wstETH as the quote, since the no arb strategy would produce
+be the funding rate on the perp adjusted for risk-free (i.e. apetite for NFT leverage thru the perp) divided by `LTV` if using wstETH as the quote,
+since the no arb strategy would produce
 
 ```
 f'_papr = (f_perp - r) / LTV
