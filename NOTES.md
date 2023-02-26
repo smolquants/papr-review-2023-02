@@ -27,9 +27,9 @@ I could:
 The yield on the *loan principle* for this strategy would be approximately the ETH staking rate minus the funding rate needed
 to pay PAPR holders for the loan. But this strategy would represent earning a risk-free premium on top of the ETH staking rate
 if PAPR funding != risk free rate (ignoring liquidations and collateral). So by no arb arguments, IF you ignore the capital locked
-up in the vault to mint the loan, would expect the PAPR/RAI funding rate to be equal to the ETH staking rate on this vault.
+up in the vault to mint the loan, would expect the PAPR funding rate to be equal to the ETH staking rate on this vault.
 
-*However*, as mentioned above, this completely ignores the ETH required to back the PAPR/RAI loan (overcollateralized). These same
+*However*, as mentioned above, this completely ignores the ETH required to back the PAPR loan (overcollateralized). These same
 borrowers employing this no-arb strategy are comparing all of their ETH capital locked up in this strategy relative to the same
 amount of ETH capital simply staked earning the protocol risk-free rate. So when employing the PAPR no-arb strategy, they're really
 *losing* yield from the ETH staking rate `r` on the capital needed to back the PAPR loan, and therefore need to compensate for that
@@ -46,13 +46,13 @@ f = r * (1 - 1 / LTV)
 ```
 
 where the overcollateralization ratio `LTV` really hurts here -- borrowers need to overcompensate for the lost risk free rate on the
-ETH collateral used to back the loan, which means one should anticipate the funding rate to be persistently negative on RAI/ETH backed PAPR
-as `LTV > 1`. In the PAPR case, implies `mark > target` consistently, which is bad for PAPR token holders; i.e. not enough demand for leverage
+ETH collateral used to back the loan, which means one should anticipate the funding rate to be persistently negative on ETH backed PAPR
+as `LTV < 1`. In the PAPR case, implies `mark > target` consistently, which is bad for PAPR token holders; i.e. not enough demand for leverage
 given the interest rate parity arguments above.
 
 ### NFT collateral
 
-You can apply the sam elogic to the PAPR token loans backed by NFT collateral to find a similar strategy that gives a rough estimate for
+You can apply the same logic to the PAPR token loans backed by NFT collateral to find a similar strategy that gives a rough estimate for
 the no-arb funding rate IF you assume the existence of an NFT perpetual that users of PAPR can short to hedge their exposure to the NFT
 collateral locked in PAPR vaults. No arb strategy would be:
 
