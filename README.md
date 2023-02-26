@@ -2,7 +2,7 @@
 
 Economic review of [PAPR](https://papr.wtf).
 
-Higher level thoughts on the economic mechanisms behind the protocol in [NOTES.md](./NOTES.md).
+See [`review/`](./review/) for the full review.
 
 
 ## Replication
