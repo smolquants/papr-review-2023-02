@@ -1,4 +1,6 @@
-# Notes
+# Funding Rates
+
+Funding rate mechanism analysis.
 
 ## TL;DR
 
@@ -11,10 +13,7 @@ reflect the actual "premium" component (i.e. mark vs target price), since the "i
 playing the basis trade on a hypothetical perpetual market for that same NFT collection.
 
 
-## Background
-
-
-## No Arbitrage Funding Rates
+## No-Arbitrage Funding Rates
 
 Should consider making the numeraire (i.e. quote token) wstETH such that each Uniswap pool querying mark from
 has pairing wstETH vs PAPR, otherwise likely encounter similar issues to [RAI](https://community.reflexer.finance/t/can-oracles-double-as-co-stakers-how-rai-like-systems-might-safely-support-staked-eth/397).
