@@ -20,26 +20,27 @@ given the current collateral value in quote and the target price set by the cont
 (variable). The formula used is can trigger if:
 
 ```math
-D > C(t) * LTV_{max} / R(t)
+D > \frac{C(t) \cdot \mathrm{LTV}_{max}}{R(t)}
 ```
 
-where $D$ is the PAPR debt, $C(t)$ is the collateral value in quote terms, $LTV_{max}$ is the
+where $D$ is the PAPR debt, $C(t)$ is the collateral value in quote terms, $\mathrm{LTV}_{max}$ is the
 max loan to value param (50\% in practice) and $R(t)$ is the controller's current target price
 for PAPR against the quote token. The target price the controller targets (and is updated at each write to controller)
 follows the update equation
 
 ```math
-R(t) = R(t - \Delta t) \cdot \bigg[ \frac{R(t-\Delta t)}{M(t)} \bigg]^{\Delta t / F}
+R(t) = R(t - \Delta t) \cdot \bigg[ \frac{R(t-\Delta t)}{M(t)} \bigg]^{\frac{\Delta t}{F}}
 ```
 
 where $\Delta t$ is the time elapsed since the last target update (i.e. funding payment),
-$F$ is the funding period gov param (set to 90 days currently), and $M(t)$ is the mark price
+$F$ is the funding period gov param (initially set to 90 days), and $M(t)$ is the mark price
 from the Uniswap pool for the PAPR token vs quote.
 
 Therefore, the goal is to force the controller to target $R(t) \to \infty$ to make the collateral
 worth significantly less in internal PAPR terms. To accomplish this through the Uniswap pool,
-one must sell into the pool so $M(t) \to 0$, which the controller will then attempt to counter with
-significantly higher targets.
+one must sell PAPR into the pool so $M(t) \to 0$, which the controller will then attempt to counter
+with significantly higher targets. Note, selling PAPR is a relatively simple task as one could mint PAPR
+by taking out a collateralized loan from the protocol, then intentionally dump the PAPR on the Uniswap pool.
 
 
 ### Uniswap V2 Math
