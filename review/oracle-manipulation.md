@@ -56,6 +56,20 @@ M_{liq} \approx R(t - \Delta t) \cdot \bigg[ \frac{\mathrm{LTV}(t - \Delta t)}{\
 
 when assuming the collateral value in quote terms is approximately the same since the last funding update: $C(t) \approx C(t-\Delta t)$.
 
+If we define the ratio of LTVs in the form
+
+```math
+\frac{\mathrm{LTV}(t-\Delta t)}{\mathrm{LTV}_{max}} = e^{- l(t-\Delta t)}
+```
+
+where $l(t)$ is the log difference in max vs vault LTV at time $t$, we get a nice Taylor series expansion to first order
+
+```math
+M_{liq} \approx R(t - \Delta t) \cdot \bigg[ 1 - \frac{F}{\Delta t} \cdot l(t - \Delta t) + \ldots \bigg]
+```
+
+to work with. Also gives us some more clarity on the effect on mark liquidation price difference in LTV from max has.
+
 
 ### Uniswap V2 Math
 
