@@ -68,7 +68,7 @@ where $l(t)$ is the log difference in max vs vault LTV at time $t$, we get a nic
 M_{liq} \approx R(t - \Delta t) \cdot \bigg[ 1 - \frac{F}{\Delta t} \cdot l(t - \Delta t) + \ldots \bigg]
 ```
 
-to work with. Also gives us some more clarity on the effect on mark liquidation price difference in LTV from max has.
+to work with. Also gives us some more clarity on the effect differences in LTV have on the mark liquidation price.
 
 
 ### Uniswap V2 Math
