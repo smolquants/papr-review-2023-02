@@ -42,6 +42,20 @@ which the controller will then attempt to counter with significantly higher targ
 relatively simple task as one could mint PAPR by taking out an overcollateralized loan from the protocol, then intentionally
 dump the PAPR on the Uniswap pool.
 
+Solving for the mark price that triggers a liquidation:
+
+```math
+M_{liq} = R(t - \Delta t) \cdot \bigg[ \frac{R(t - \Delta t) \cdot D}{C(t) \cdot \mathrm{LTV}_{max}} \bigg]^{F / \Delta t}
+```
+
+which can be simplified to approximately
+
+```math
+M_{liq} \approx R(t - \Delta t) \cdot \bigg[ \frac{\mathrm{LTV}(t - \Delta t)}{\mathrm{LTV}_{max}} \bigg]^{F / \Delta t}
+```
+
+when assuming the collateral value in quote terms is approximately the same since the last update: $C(t) \approx C(t-\Delta t)$.
+
 
 ### Uniswap V2 Math
 
