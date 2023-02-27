@@ -7,7 +7,7 @@ Funding rate mechanism analysis.
 - Using ETH as the quote token for a given PAPR vault setup causes similar issues to what RAI is currently experiencing
 - Meaning, from no arbitrage / interest rate parity arguments, should expect the funding rate on the associated PAPR vault
 to likely trend negative as the "risk-free" rate the vault needs to compete with (and compare to) is the ETH staking rate
-- Consider using wstETH or one of the other LSDs as the quote token to target PAPR rates against. This would make PAPR funding rates
+- Consider using wstETH or one of the other non-rebase LSDs as the quote token to target PAPR rates against. This would make PAPR funding rates
 reflect the actual "premium" component (i.e. mark vs target price), since the "interest rate" component is built into the LSD token itself
 - Interestingly, a simple replication strategy shows passively holding the PAPR token for an NFT collection appears equivalent to
 playing the basis trade on a hypothetical perpetual market for that same NFT collection.
@@ -92,7 +92,7 @@ won't be. Which means PAPR holders backed by these NFTs should expect negative f
 tokens.
 
 This is essentially the same reason (but for NFT collateral) to consider adding the "interest rate" premium into the PAPR mechanism funding rate by
-using wstETH or one of its LSD equivalents as the quote/pairing token in the underlying PAPR liquidity pool on Uniswap, as the funding rate would then
+using wstETH or one of its non-rebase LSD equivalents as the quote token in the underlying PAPR liquidity pool on Uniswap, as the funding rate would then
 implicitly incorporate the risk free rate in the no arb strategy above.
 
 Notice, if `f_perp` also incorporates the interest rate component, then when using the LSD, should expect PAPR funding rates to
