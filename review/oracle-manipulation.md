@@ -48,13 +48,13 @@ Solving for the mark price that triggers a liquidation:
 M_{liq} = R(t - \Delta t) \cdot \bigg[ \frac{R(t - \Delta t) \cdot D}{C(t) \cdot \mathrm{LTV}_{max}} \bigg]^{F / \Delta t}
 ```
 
-which can be simplified to approximately
+where $M(t) < M_{liq}$ satisfies the liquidation condition. This can be simplified to approximately
 
 ```math
 M_{liq} \approx R(t - \Delta t) \cdot \bigg[ \frac{\mathrm{LTV}(t - \Delta t)}{\mathrm{LTV}_{max}} \bigg]^{F / \Delta t}
 ```
 
-when assuming the collateral value in quote terms is approximately the same since the last update: $C(t) \approx C(t-\Delta t)$.
+when assuming the collateral value in quote terms is approximately the same since the last funding update: $C(t) \approx C(t-\Delta t)$.
 
 
 ### Uniswap V2 Math
