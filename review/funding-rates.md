@@ -19,7 +19,7 @@ Should consider making the numeraire (i.e. quote token) wstETH such that each Un
 has pairing wstETH vs PAPR, otherwise likely encounter similar issues to [RAI](https://community.reflexer.finance/t/can-oracles-double-as-co-stakers-how-rai-like-systems-might-safely-support-staked-eth/397).
 
 Using wstETH as the quote in adjusting PAPR token targets would effectively have the funding rate mechanism on PAPR represent solely
-the apetite for leverage against collateral types supported by PAPR. This is analogous to the "premium" component of the funding
+the appetite for leverage against collateral types supported by PAPR. This is analogous to the "premium" component of the funding
 rate on e.g. BitMEX perps. Bringing in wstETH as the quote to adjust targets against would be analogous to including the "interest rate"
 component of the BitMEX funding rate, assuming for the ETH economy that staked ETH yields (consensus portion) represent the "risk-free"
 rate (or as close as we'll get to one).
@@ -68,7 +68,7 @@ collateral locked in PAPR vaults. No arb strategy would be:
 
 - Buy the NFT collateral with your ETH
 - Sell the perp on the collateral to hedge NFT exposure
-- Mint PAPR using NFT colateral
+- Mint PAPR using NFT collateral
 - Sell PAPR for ETH on secondary
 - Stake ETH to earn "risk-free" rate
 
@@ -83,8 +83,7 @@ where `f_perp > 0` would mean getting paid funding to short the perp.
 No arb means this `y` should go to zero over time, so would expect the PAPR funding rate to be
 
 ```
-f_papr = r + (1/LTV) * (f_perp - r)
-       = f_perp / LTV + r * (1 - 1/LTV)
+f_papr = f_perp / LTV + r * (1 - 1/LTV)
 ```
 
 This is only > 0 if the hypothetical `f_perp` funding rate short hedge is getting paid out greater than `r * (1 - LTV)`. I would expect this to be
@@ -96,8 +95,8 @@ This is essentially the same reason (but for NFT collateral) to consider adding 
 using wstETH or one of its LSD equivalents as the quote/pairing token in the underlying PAPR liquidity pool on Uniswap, as the funding rate would then
 implicitly incorporate the risk free rate in the no arb strategy above.
 
-Notice, if `f_perp` also incorporates the interest rate component, like on BitMEX, then when using the LSD, should expect PAPR funding rates to
-be the funding rate on the perp adjusted for risk-free (i.e. apetite for NFT leverage thru the perp) divided by `LTV` if using wstETH as the quote,
+Notice, if `f_perp` also incorporates the interest rate component, then when using the LSD, should expect PAPR funding rates to
+be the funding rate on the perp adjusted for risk-free (i.e. appetite for NFT leverage thru the perp) divided by `LTV`,
 since the no arb strategy would produce
 
 ```
@@ -108,6 +107,6 @@ f'_papr = (f_perp - r) / LTV
 where `f = f' + r` in both PAPR and perp cases. `f'` can be interpreted as the mark "premium" component of the funding rate and `r` the interest
 rate component when using the BitMEX analogy.
 
-Interestingly, passively holding the PAPR token for an NFT collection appears equivalent to playing the basis trade on a hypothetical perp for
-that same NFT collection, through the replication strategy above. Therefore, price appreciation on the respective PAPR token should produce
+Interestingly, passively holding the PAPR token for an NFT collection appears equivalent to playing the basis trade on a hypothetical perp (i.e. NFT/ETH perp market)
+for that same NFT collection, through the replication strategy above. Therefore, price appreciation on the respective PAPR token should produce
 similar returns to that of the basis trade on a hypothetical NFT perp.
