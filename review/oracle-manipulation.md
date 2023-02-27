@@ -68,7 +68,16 @@ where $l(t)$ is the log difference in max vs vault LTV at time $t$, we get a nic
 M_{liq} \approx R(t - \Delta t) \cdot \bigg[ 1 - \frac{F}{\Delta t} \cdot l(t - \Delta t) + \ldots \bigg]
 ```
 
-to work with. Also gives us some more clarity on the effect differences in LTV have on the mark liquidation price.
+to work with. Also gives us some more clarity on the effect differences in LTV have on the mark liquidation price. Further,
+on the importance of having significantly longer funding periods vs funding update intervals $F \gg \Delta t$, as this forces
+the attack to reach a much smaller price to trigger liquidations.
+
+Given changes in mark price do *not* trigger updates to the target price on the PAPR controller, the protocol is taking the
+risk that users will interact with the controller frequently (relative to $F$ time period). While currently $F = 90$ days does seem
+relatively safe, the protocol should aim to trigger updates frequently (even if via cron-like calls to the controller)
+to avoid a situation where e.g. the controller for a PAPR token hasn't been called in 10+ days. Otherwise, in the 10+ day example,
+an attacker would only need to decrease mark by ~36% to trigger on a near-liquidation vault that has LTV / LTV_max = 96%, which seems
+very possible for the only [$50K of liquidity](https://papr.wtf/tokens/paprMeme/lp) currently in paprMEME.
 
 
 ### Uniswap V2 Math
