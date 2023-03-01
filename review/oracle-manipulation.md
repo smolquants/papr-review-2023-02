@@ -97,7 +97,7 @@ as the PAPR controller can tune $F$ to as large as necessary to reduce manipulab
 One does, however, need to worry about the ratio of target to prior TWAP value being raised to $\Delta t / \beta$, since as $\Delta t \to F$ in
 cases when `target > mark`, the liquidation spot price becomes less extreme for the manipulator.
 
-To avoid the latter issues, would consider making cron-like calls to the PAPR controller's `updateTarget()` function to keep $\delta t$ relatively small
+To avoid the latter issues, would consider making cron-like calls to the PAPR controller's `updateTarget()` function to keep $\Delta t$ relatively small
 for target adjustments -- this issue is due to the fact that the PAPR controller update process is *separate* from the Uni V3 TWAP update
 process (i.e. can't get triggered when users swap on Uniswap and move the mark).
 
@@ -112,9 +112,41 @@ to enable liquidity provision over a finite price range chosen by the LP. The re
 ```
 
 where $x_v = x + \frac{L}{\sqrt{p_b}}$, $y_v = y + L \sqrt{p_a}$ are the virtual reserves (following the original V2 invariant) at the
-current price $P = \frac{y_v}{x_v}$. V3 reduces to V2 for an LP range covering the entire price range: i.e. $p_a \to 0$, $p_b \to \infty$.
+current price $p = \frac{y_v}{x_v}$. V3 reduces to V2 for an LP range covering the entire price range: i.e. $p_a \to 0$, $p_b \to \infty$.
 
-Goal for the attacker is to calculate the amount of capital $\Delta x$ (i.e. quantity of PAPR token) they need to send to the pool in order to
-move the price below $P_{liq}$, where $\Delta x$ can be minted via an overcollateralized loan from PAPR.
+Goal for the attacker is to calculate the amount of capital $\Delta x$ (i.e. quantity of PAPR token) required to send to the pool in order to
+move the price below $P_{liq}$, where $\Delta x$ can be minted via an overcollateralized loan from PAPR. Within the tick range, the amount of real $x$
+reserves left for the LP position as a function of current price $p$ is:
+
+```math
+x(p) = L \cdot \bigg[ \frac{1}{\sqrt{p}} - \frac{1}{\sqrt{p_b}} \bigg]
+```
+
+Therefore, to get through the *first* tick range $[p_{a0}, p_{b0}]$, the attacker must send
+
+```math
+\Delta x_{0 \to a0} = L_{a0, b0} \cdot \bigg[ \frac{1}{\sqrt{p_{a0}}} - \frac{1}{\sqrt{p_0}} \bigg]
+```
+
+taking the start price for the entire pool to be $p_0$. To get through each subsequent price range $[p_{ai}, p_{bi}]$ with liquidity $L_{ai, bi}$
+on the way to a final spot price $p_f$, the attacker must sweep through providing additional capital
+
+```math
+\Delta x_{bi \to ai} = L_{ai, bi} \cdot \bigg[ \frac{1}{\sqrt{p_{ai}}} - \frac{1}{p_{bi}} \bigg]
+```
+
+along each range step. To push through the final range to the ultimate price desired,
+
+```math
+\Delta x_{bn \to f} = L_{an, bn} \cdot \bigg[ \frac{1}{\sqrt{p_f}} - \sqrt{1}{\sqrt{p_{bn}}} \bigg]
+```
+
+Total capital needed to sell into the pool to reach $p_f$ from a start of $p_0$ is simply the sum of all these terms
+
+```math
+\delta x = \delta x_{0 \to a0} + \sum_{i=1}^{n-1} \Delta x_{bi \to ai} + \Delta x_{bn \to f}  
+```
+
+where $i \in \[1, n-1\]$ is simply a counter for all the tick ranges in between.
 
 

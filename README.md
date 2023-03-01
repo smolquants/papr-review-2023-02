@@ -32,7 +32,3 @@ Then launch [`ape-notebook`](https://github.com/ApeWorX/ape-notebook)
 ```sh
 (papr-review-2023-02) $ ape notebook
 ```
-
-
-## Scripts
-
