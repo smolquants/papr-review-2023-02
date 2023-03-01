@@ -10,6 +10,8 @@ being set well. Given current numbers, the attacker would need to wait for an in
 - Still, the amount of capital required to force the Uniswap pool to the `MIN_TICK` is finite given the lack of full-range liquidity provision in the pool
 - As backup protection against the extreme case where the cap can no longer protect paprMEME vaults from liquidation via manipulation, consider increasing the cost of attack to manipulate the underlying
 PAPR/WETH pool by incentivizing liquidity provision across the full tick range
+- Should also consider making cron-like calls to the PAPR controller's `updateTarget()` function to keep $\Delta t$ relatively small, which helps eliminate the viability of this
+manipulation attack given the controller-imposed `_targetMarkRatioMax` cap.
 
 ## Manipulating the Uniswap Pool to Trigger Liquidations
 
