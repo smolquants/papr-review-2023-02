@@ -122,14 +122,14 @@ reserves left for the LP position as a function of current price $p$ is:
 x(p) = L \cdot \bigg[ \frac{1}{\sqrt{p}} - \frac{1}{\sqrt{p_b}} \bigg]
 ```
 
-Therefore, to get through the *first* tick range $[p_{a_0}, p_{b_0}]$, the attacker must send
+Therefore, to get through the first tick range $[p_{a_0}, p_{b_0}]$, the attacker must send
 
 ```math
 \Delta x_{0 \to a_0} = L_{a_0, b_0} \cdot \bigg[ \frac{1}{\sqrt{p_{a_0}}} - \frac{1}{\sqrt{p_0}} \bigg]
 ```
 
-taking the start price for the entire pool to be $p_0$. To get through each subsequent price range $[p_{a_i}, p_{b_i}]$ with liquidity $L_{a_i, b_i}$
-on the way to a final spot price $p_f$, the attacker must sweep through providing additional capital
+taking the start price for the entire pool to be $p_0$. To get through each subsequent price range $[p_{a_i}, p_{b_i}]$ with
+liquidity $L_{a_i, b_i}$ on the way to a final spot price $p_f$, the attacker must sweep through providing additional capital
 
 ```math
 \Delta x_{b_i \to a_i} = L_{a_i, b_i} \cdot \bigg[ \frac{1}{\sqrt{p_{a_i}}} - \frac{1}{\sqrt{p_{b_i}}} \bigg]
@@ -141,12 +141,34 @@ along each range step. To push through the final range to the ultimate price des
 \Delta x_{b_n \to f} = L_{a_n, b_n} \cdot \bigg[ \frac{1}{\sqrt{p_f}} - \frac{1}{\sqrt{p_{b_n}}} \bigg]
 ```
 
-Total capital needed to sell into the pool to reach $p_f$ from a start of $p_0$ is simply the sum of all these terms
+Total capital needed to sell into the pool to reach $p_f$ from a start of $p_0$ is the sum of all these terms
 
 ```math
 \Delta x = \Delta x_{0 \to a_0} + \sum_{i=1}^{n-1} \Delta x_{b_i \to a_i} + \Delta x_{b_n \to f}  
 ```
 
-where $i \in \[1, n-1\]$ is simply a counter for all the tick ranges in between.
+where $i \in \[1, n-1\]$ is a counter for all the tick ranges in between. $p_f = P_{liq}$ enables the attacker to trigger
+the liquidation on the PAPR vault.
 
+From a manipulation standpoint, the [downside to Uni V3 v.s. V2](https://cmichel.io/replaying-ethereum-hacks-rari-fuse-vusd-price-manipulation/)
+is it can take a *finite* amount of capital to reach the minimum tick range for the pool (i.e. go to effectively 0), depending on
+the existing liquidity distribution of the pool. Whereas V2 forces liquidity to be spread across the entire price range, V3 with
+concentrated liquidity does *not* enforce this, although allows for it if an LP desires. By enforcing provision of liquidity over the
+full price range, V2 requires an infinite amount of capital to reach the minimum tick range for the pool.
+
+With regard to the oracle manipulation attack above, the finite capital required to reach a price of effectively zero on Uni V3 means that
+the attacker does not necessarily have to worry about selling through intermediate liquidity in ranges up to $p_f$ *if* the liquidity LPs
+are providing ends prior to $p_f$. Meaning, even if $P_liq$ required to liquidate on PAPR is near zero (robust from PAPR mechanism standpoint),
+the actual capital to get there could be significantly less than anticipated when referencing Uni V2 as the liquidity profile on the V3
+PAPR pool could end (i.e. no more liquidity) far higher than the liquidation spot price the attacker needs to reach. This effectively
+*increases* the liquidation price the attacker needs to sell into to
+
+```math
+P'_{liq} = \max (P_{liq}, p_{l})
+```
+
+where $p_l$ is the lowest price at which LPs are currently providing liquidity on the V3 pool. As once $p_l$ is passed, the pool moves to
+the [tick range min](https://github.com/Uniswap/v3-core/blob/main/contracts/UniswapV3Pool.sol#L656). LPs for the PAPR pool should consider
+replicating the robustness (to manipulation) of V2 by providing liquidity over the full tick range, which forces the capital requirements
+for manipulating the pool to the min tick range to be infinite.
 
