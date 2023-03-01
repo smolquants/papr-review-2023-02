@@ -90,8 +90,23 @@ instantaneous spot price to be reached when the attacker sells PAPR to the Unisw
 The mark price used is given by the expression for the geometric TWAP:
 
 ```math
-M(t) = P_{t-\Delta t, t} = \bigg( \prod_{i = t - \Delta t}^{t} P_i )^{1/\Delta t}   
+M(t) = P_{t-\Delta t, t} = \bigg( \prod_{i = t - \Delta t}^{t} P_i \bigg)^{1/\Delta t}   
 ```
 
+Assume the attacker only manipulates over the last block in the TWAP calculation, with block times of $\beta$. Can rearrange the above
+in terms of the TWAP from $\[t- \Delta t, t-\beta \]$ and the relative difference with this and the spot price $P_t$ realized post swap
+over the last $\beta$ seconds of block time:
+
+```math
+M(t) = P_{t-\Delta t, t-\beta} \cdot \bigg( \frac{P_t}{P_{t-\Delta t, t-\beta}} \bigg)^{\beta / \Delta t}
+```
+
+Inverting for the relative difference the attacker needs to attain in terms of the mark price required from the PAPR calc:
+
+```math
+\frac{P_t}{P_{t-\Delta t, t-\beta}} = \bigg(\frac{M(t)}{P_{t - \Delta t, t - \beta}} \bigg)^{\Delta t / \beta}
+```
+
+Taking $M(t) = M_{liq}$ in this expression gives the spot price required to liquidate the PAPR vault.
 
 
