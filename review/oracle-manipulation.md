@@ -76,19 +76,23 @@ Given changes in mark price do *not* trigger updates to the target price on the 
 risk that users will interact with the controller frequently (relative to $F$ time period). While currently $F = 90$ days does seem
 relatively safe, the protocol should aim to trigger updates frequently (even if via cron-like calls to the controller)
 to avoid a situation where e.g. the controller for a PAPR token hasn't been called in 10+ days. Otherwise, in the 10+ day example,
-an attacker would only need to decrease mark by ~36% to trigger on a near-liquidation vault that has LTV / LTV_max = 96%, which seems
-very possible for the only [$50K of liquidity](https://papr.wtf/tokens/paprMeme/lp) currently in paprMEME.
-
-
-### Uniswap V2 Math
-
+an attacker would only need to decrease mark by ~36% to trigger on a near-liquidation vault that has LTV / LTV_max = 96%, which seems plausible
+for the only [$50K of liquidity](https://papr.wtf/tokens/paprMeme/lp) currently in paprMEME.
 
 
 ### Uniswap V3 Math
 
-[Uniswap V3 Pools](https://uniswap.org/whitepaper-v3.pdf) are extensions of the core V2
-pool to incorporate the notion of concentrated liquidity.
+The PAPR controller [uses](https://github.com/with-backed/papr/blob/master/src/UniswapOracleFundingRateController.sol#L144) the Uniswap V3
+geometric mean time-weighted average price over the time since the last call to `updateTarget()` as the mark price $M(t)$ in the target calculation
+from the prior section. Using the geometric mean TWAP makes the mark price more difficult to manipulate, requiring a much lower
+instantaneous spot price to be reached when the attacker sells PAPR to the Uniswap pool.
 
+The mark price used is given by the expression for the geometric TWAP:
+
+```math
+M(t) &=& P_{t-\Delta t, t}
+     &=& \bigg( \prod_{i = t - \Delta t}^{t} P_i )^{1/\Delta t}   
+```
 
 
 
