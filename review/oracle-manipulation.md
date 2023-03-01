@@ -8,7 +8,7 @@ Oracle manipulation analysis.
 - This is due to both the liquidation price being *outside* of the `MIN_TICK` price supported by the Uniswap pool implementation and the paprMEME `_targetMarkRatioMax` internal constant
 being set well. Given current numbers, the attacker would need to wait for an instance when the `updateTarget()` function hasn't been called in $\Delta t > 44$ days
 - Still, the amount of capital required to force the Uniswap pool to the `MIN_TICK` is finite given the lack of full-range liquidity provision in the pool
-- As a backup in the extreme case where the cap can no longer protect paprMEME vaults from liquidation via manipulation, consider increasing the cost of attack to manipulate the underlying
+- As backup protection against the extreme case where the cap can no longer protect paprMEME vaults from liquidation via manipulation, consider increasing the cost of attack to manipulate the underlying
 PAPR/WETH pool by incentivizing liquidity provision across the full tick range
 
 ## Manipulating the Uniswap Pool to Trigger Liquidations
@@ -64,7 +64,7 @@ M_{liq} \approx R(t - \Delta t) \cdot \bigg[ \frac{\mathrm{LTV}(t - \Delta t)}{\
 ```
 
 when assuming the collateral value in quote terms is approximately the same since the last funding update: $C(t) \approx C(t-\Delta t)$.
-Liquidations become impossible if $M_{liq} / R(t - \Delta t) < 1 / B^{+}_{R/M}$, due to the cap enforced by the PAPR controller.
+Liquidations become impossible if $R(t - \Delta t) / M_{liq} > B^{+}_{R/M}$ due to the cap enforced by the PAPR controller.
 
 
 ### Uniswap V3 TWAP Math
@@ -198,7 +198,7 @@ on the target-to-mark ratio.
 While this is a good thing in terms of the attack being impossible within a "reasonable" timeframe, it's not great that the impossibility
 of the attack rests on an implementation detail for the Uniswap pool. Particularly, since it would be relatively cheap for the attacker
 to push the price down to the minimum tick as the minimum price with liquidity on the pool $p_l$ is only 0.3329 ETH/PAPR and the pool
-has a TVL of only $55.363k.
+has a TVL of only $55.363k. Re-run [notebook/oracle-manipulation.ipynb](../notebook/oracle-manipulation.ipynb) for up to date numbers.
 
 The cap $B^{+}_{R/M}$ on the target-to-mark ratio does a very good job at eliminating the viablity of this manipulation attack
 for most "reasonable" time frames of $\Delta t$. For the current average LTV on PAPR, the attacker would have to wait $\Delta t \approx 44$ days
