@@ -157,17 +157,29 @@ concentrated liquidity does *not* enforce this, although allows for it if an LP 
 full price range, V2 requires an infinite amount of capital to reach the minimum tick range for the pool.
 
 With regard to the oracle manipulation attack above, the finite capital required to reach a price of effectively zero on Uni V3 means that
-the attacker does not necessarily have to worry about selling through intermediate liquidity in ranges up to $p_f$ *if* the liquidity LPs
-are providing ends prior to $p_f$. Meaning, even if $P_{liq}$ required to liquidate on PAPR is near zero (robust from PAPR mechanism standpoint),
+the attacker does not necessarily have to worry about selling through intermediate liquidity in ranges down to $p_f$ *if* the liquidity LPs
+are providing ends prior to $p_f$. Meaning, even if the $P_{liq}$ required to liquidate on PAPR is near zero (robust from PAPR mechanism standpoint),
 the actual capital to get there could be significantly less than anticipated as the liquidity profile on the V3 PAPR pool could end far higher
-than the liquidation spot price the attacker needs to reach. This effectively *increases* the liquidation price the attacker needs to reach to
+than the liquidation spot price the attacker needs to reach. This effectively *increases* the liquidation price to
 
 ```math
 P'_{liq} = \max (P_{liq}, p_{l})
 ```
 
-where $p_l$ is the lowest price at which LPs are currently providing liquidity on the V3 pool. As once $p_l$ is passed, the pool moves to
-the [tick range min](https://github.com/Uniswap/v3-core/blob/main/contracts/UniswapV3Pool.sol#L656). LPs for the PAPR pool should consider
-replicating the robustness (to manipulation) of V2 by providing liquidity over the full tick range, which forces the capital requirements
-for manipulating the pool to the min tick range to be infinite.
+where $p_l$ is the lowest price at which LPs are currently providing liquidity on the V3 pool, as long as $P_{liq}$ from PAPR is within
+the price range supported by Uni V3 (i.e. above the min tick). As once $p_l$ is passed, the pool moves to the [tick range min](https://github.com/Uniswap/v3-core/blob/main/contracts/UniswapV3Pool.sol#L656).
+LPs for the PAPR pool should consider replicating the robustness (to manipulation) of V2 by providing liquidity over the full tick range,
+which forces the capital requirements for manipulating the pool to the min tick range to be infinite.
+
+
+### Some Numbers
+
+Referencing info on 2023-03-01 from [papr.wtf](https://papr.wtf):
+
+| Total    | Amount (PAPR) |  Avg LTV  | Last Update |  Last Target     |   Last Mark      |  
+| ------   | ------------- | --------- | ----------- | ---------------  | ---------------  |
+| 36 loans |   21.958      |  29.21\%  |  12 h ago   |  0.995 WETH/PAPR |  0.975 WETH/PAPR |
+
+
+
 
