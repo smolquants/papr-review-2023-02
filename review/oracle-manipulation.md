@@ -56,30 +56,6 @@ M_{liq} \approx R(t - \Delta t) \cdot \bigg[ \frac{\mathrm{LTV}(t - \Delta t)}{\
 
 when assuming the collateral value in quote terms is approximately the same since the last funding update: $C(t) \approx C(t-\Delta t)$.
 
-If we define the ratio of LTVs in the form
-
-```math
-\frac{\mathrm{LTV}(t-\Delta t)}{\mathrm{LTV}_{max}} = e^{- l(t-\Delta t)}
-```
-
-where $l(t)$ is the log difference in max vs vault LTV at time $t$, we get a nice Taylor series expansion to first order
-
-```math
-M_{liq} \approx R(t - \Delta t) \cdot \bigg[ 1 - \frac{F}{\Delta t} \cdot l(t - \Delta t) + \ldots \bigg]
-```
-
-to work with. Also gives us some more clarity on the effect differences in LTV have on the mark liquidation price. Further,
-on the importance of having significantly longer funding periods vs funding update intervals $F \gg \Delta t$, as this forces
-the attack to reach a much smaller price to trigger liquidations.
-
-Given changes in mark price do *not* trigger updates to the target price on the PAPR controller, the protocol is taking the
-risk that users will interact with the controller frequently (relative to $F$ time period). While currently $F = 90$ days does seem
-relatively safe, the protocol should aim to trigger updates frequently (even if via cron-like calls to the controller)
-to avoid a situation where e.g. the controller for a PAPR token hasn't been called in 10+ days. Otherwise, in the 10+ day example,
-an attacker would only need to decrease mark by ~36% to trigger on a near-liquidation vault that has LTV / LTV_max = 96%, which seems plausible
-for the only [$50K of liquidity](https://papr.wtf/tokens/paprMeme/lp) currently in paprMEME.
-
-
 ### Uniswap V3 Math
 
 The PAPR controller [uses](https://github.com/with-backed/papr/blob/master/src/UniswapOracleFundingRateController.sol#L144) the Uniswap V3
@@ -104,7 +80,7 @@ M(t) = P_{t-\Delta t, t-\beta} \cdot \bigg( \frac{P_t}{P_{t-\Delta t, t-\beta}} 
 Inverting for the relative difference the attacker needs to attain in terms of the mark price required from the PAPR calc:
 
 ```math
-\frac{P_t}{P_{t-\Delta t, t-\beta}} = \bigg(\frac{M(t)}{P_{t - \Delta t, t - \beta}} \bigg)^{\Delta t / \beta}
+P_t = P_{t-\Delta t, t-\beta} \cdot \bigg(\frac{M(t)}{P_{t - \Delta t, t - \beta}} \bigg)^{\Delta t / \beta}
 ```
 
 Taking $M(t) = M_{liq}$ in this expression gives the spot price required to liquidate the PAPR vault.
