@@ -176,10 +176,9 @@ which forces the capital requirements for manipulating the pool to the min tick 
 
 Referencing info on 2023-03-01 from [papr.wtf](https://papr.wtf):
 
-| Total    | Amount (PAPR) |  Avg LTV  | Last Update |  Last Target     |   Last Mark      |  
-| ------   | ------------- | --------- | ----------- | ---------------  | ---------------  |
-| 36 loans |   21.958      |  29.21\%  |  12 h ago   |  0.995 WETH/PAPR |  0.975 WETH/PAPR |
+| Total    | Amount (PAPR) |  Avg LTV  |   Max LTV   |  Last Update |  Last Target     |   Last Mark      |  Funding Period |  
+| ------   | ------------- | --------- | ----------- | ------------ | ---------------  | ---------------- | --------------- |
+| 36 loans |   21.958      |  29.21\%  |   50\%      |   12 h ago   |  0.995 WETH/PAPR |  0.975 WETH/PAPR |   90 d          |
 
-
-
+Take block time to be $\beta = 12$ seconds.
 
