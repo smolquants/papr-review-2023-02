@@ -6,7 +6,7 @@ build-backend = "hatchling.build"
 name = "papr-review-2023-02"
 description = ''
 readme = "README.md"
-requires-python = ">=3.8,<3.11"
+requires-python = ">=3.9,<3.11"
 license = ""
 keywords = []
 authors = [
@@ -15,7 +15,6 @@ authors = [
 classifiers = [
   "Development Status :: 4 - Beta",
   "Programming Language :: Python",
-  "Programming Language :: Python :: 3.8",
   "Programming Language :: Python :: 3.9",
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: Implementation :: CPython",
@@ -47,7 +46,7 @@ cov = "pytest --cov-report=term-missing --cov-config=pyproject.toml --cov=papr_r
 no-cov = "cov --no-cov"
 
 [[tool.hatch.envs.test.matrix]]
-python = ["38", "39", "310"]
+python = ["39", "310"]
 
 [tool.coverage.run]
 branch = true
