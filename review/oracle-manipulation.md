@@ -4,6 +4,12 @@ Oracle manipulation analysis.
 
 ## TL;DR
 
+- It is currently impossible within a "reasonable" timeframe to force a liquidation on the average paprMEME vault by manipulating the spot price on the paprMEME/WETH 1\% Uniswap V3 pool
+- This is due to both the liquidation price being *outside* of the `MIN_TICK` price supported by the Uniswap pool implementation and the paprMEME `_targetMarkRatioMax` internal constant
+being set well. Given current numbers, the attacker would need to wait for an instance when the `updateTarget()` function hasn't been called in $\Delta t > 44$ days
+- Still, the amount of capital required to force the Uniswap pool to the `MIN_TICK` is finite given the lack of full-range liquidity provision in the pool
+- As a backup in the extreme case where the cap can no longer protect paprMEME vaults from liquidation via manipulation, consider increasing the cost of attack to manipulate the underlying
+PAPR/WETH pool by incentivizing liquidity provision across the full tick range
 
 ## Manipulating the Uniswap Pool to Trigger Liquidations
 
@@ -40,9 +46,10 @@ from the Uniswap pool for the PAPR token vs quote.
 
 Therefore, the attacker's goal would be to force the controller to target $R(t) \to \infty$ to make the collateral
 worth significantly less in internal PAPR terms. To accomplish this, the attacker must sell PAPR into the pool so $M(t) \to 0$,
-which the controller will then attempt to counter with significantly higher targets. Note, selling PAPR is a
-relatively simple task as one could mint PAPR by taking out an overcollateralized loan from the protocol, then intentionally
-dump the PAPR on the Uniswap pool.
+which the controller will then attempt to counter with significantly higher targets. With the caveat that the PAPR controller
+imposes [bounds](https://github.com/with-backed/papr/blob/master/src/UniswapOracleFundingRateController.sol#L24) $B^{+}_{R/M}$ on the maximum
+target-to-mark ratio it will acknowledge as valid. Note, selling PAPR is a relatively simple task as one could mint PAPR by taking
+out an overcollateralized loan from the protocol, then intentionally dump the PAPR on the Uniswap pool.
 
 Solving for the mark price that triggers a liquidation:
 
@@ -57,6 +64,7 @@ M_{liq} \approx R(t - \Delta t) \cdot \bigg[ \frac{\mathrm{LTV}(t - \Delta t)}{\
 ```
 
 when assuming the collateral value in quote terms is approximately the same since the last funding update: $C(t) \approx C(t-\Delta t)$.
+Liquidations become impossible if $M_{liq} / R(t - \Delta t) < 1 / B^{+}_{R/M}$, due to the cap enforced by the PAPR controller.
 
 
 ### Uniswap V3 TWAP Math
@@ -176,9 +184,23 @@ which forces the capital requirements for manipulating the pool to the min tick 
 
 Referencing info on 2023-03-01 from [papr.wtf](https://papr.wtf):
 
-| Total    | Amount (PAPR) |  Avg LTV  |   Max LTV   |  Last Update |  Last Target     |   Last Mark      |  Funding Period |  
-| ------   | ------------- | --------- | ----------- | ------------ | ---------------  | ---------------- | --------------- |
-| 36 loans |   21.958      |  29.21\%  |   50\%      |   12 h ago   |  0.995 WETH/PAPR |  0.975 WETH/PAPR |   90 d          |
+| Total    | Amount (PAPR) |  Avg LTV  |   Max LTV   |  Last Update |  Last Target     |   Last Mark      |  Funding Period |  Target-to-Mark Bounds  |
+| ------   | ------------- | --------- | ----------- | ------------ | ---------------  | ---------------- | --------------- | ----------------------  |
+| 36 loans |   21.958      |  29.21\%  |   50\%      |   12 h ago   |  0.995 WETH/PAPR |  0.975 WETH/PAPR |   90 d          |       (0.5, 3.0)        |
 
-Take block time to be $\beta = 12$ seconds.
+Take block time to be 12 seconds. If an attacker were to manipulate the price only over 1 block (i.e. $\beta = 12$ s), the spot
+liquidation tick they'd need to achieve would be -3481790298, which is less than the [`MIN_TICK`](https://github.com/Uniswap/v3-core/blob/main/contracts/libraries/TickMath.sol#L9)
+supported by Uni V3 (i.e. outside the Uni pool price range). Which means the attack is impossible, even though given the current
+liquidity conditions, to get to the pool's min tick takes a finite amount of capital. The spot liquidation price only comes
+within the Uniswap price range if spot remains at a `MIN_TICK` value for ~ 12 hours, ignoring the cap the controller places
+on the target-to-mark ratio.
+
+While this is a good thing in terms of the attack being impossible within a "reasonable" timeframe, it's not great that the impossibility
+of the attack rests on an implementation detail for the Uniswap pool. Particularly, since it would be relatively cheap for the attacker
+to push the price down to the minimum tick as the minimum price with liquidity on the pool $p_l$ is only 0.3329 ETH/PAPR and the pool
+has a TVL of only $55.363k.
+
+The cap $B^{+}_{R/M}$ on the target-to-mark ratio does a very good job at eliminating the viablity of this manipulation attack
+for most "reasonable" time frames of $\Delta t$. For the current average LTV on PAPR, the attacker would have to wait $\Delta t \approx 44$ days
+for the manipulation to even become possible.
 
