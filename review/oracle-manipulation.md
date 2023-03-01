@@ -90,8 +90,7 @@ instantaneous spot price to be reached when the attacker sells PAPR to the Unisw
 The mark price used is given by the expression for the geometric TWAP:
 
 ```math
-M(t) &=& P_{t-\Delta t, t}
-     &=& \bigg( \prod_{i = t - \Delta t}^{t} P_i )^{1/\Delta t}   
+M(t) = P_{t-\Delta t, t} = \bigg( \prod_{i = t - \Delta t}^{t} P_i )^{1/\Delta t}   
 ```
 
 
