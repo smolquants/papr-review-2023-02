@@ -125,26 +125,26 @@ x(p) = L \cdot \bigg[ \frac{1}{\sqrt{p}} - \frac{1}{\sqrt{p_b}} \bigg]
 Therefore, to get through the *first* tick range $[p_{a0}, p_{b0}]$, the attacker must send
 
 ```math
-\Delta x_{0 \to a0} = L_{a0, b0} \cdot \bigg[ \frac{1}{\sqrt{p_{a0}}} - \frac{1}{\sqrt{p_0}} \bigg]
+\Delta x_{0 \to a_0} = L_{a_0, b_0} \cdot \bigg[ \frac{1}{\sqrt{p_{a_0}}} - \frac{1}{\sqrt{p_0}} \bigg]
 ```
 
 taking the start price for the entire pool to be $p_0$. To get through each subsequent price range $[p_{ai}, p_{bi}]$ with liquidity $L_{ai, bi}$
 on the way to a final spot price $p_f$, the attacker must sweep through providing additional capital
 
 ```math
-\Delta x_{bi \to ai} = L_{ai, bi} \cdot \bigg[ \frac{1}{\sqrt{p_{ai}}} - \frac{1}{p_{bi}} \bigg]
+\Delta x_{b_i \to a_i} = L_{a_i, b_i} \cdot \bigg[ \frac{1}{\sqrt{p_{a_i}}} - \frac{1}{\sqrt{p_{b_i}}} \bigg]
 ```
 
 along each range step. To push through the final range to the ultimate price desired,
 
 ```math
-\Delta x_{bn \to f} = L_{an, bn} \cdot \bigg[ \frac{1}{\sqrt{p_f}} - \sqrt{1}{\sqrt{p_{bn}}} \bigg]
+\Delta x_{b_n \to f} = L_{a_n, b_n} \cdot \bigg[ \frac{1}{\sqrt{p_f}} - \frac{1}{\sqrt{p_{b_n}}} \bigg]
 ```
 
 Total capital needed to sell into the pool to reach $p_f$ from a start of $p_0$ is simply the sum of all these terms
 
 ```math
-\delta x = \delta x_{0 \to a0} + \sum_{i=1}^{n-1} \Delta x_{bi \to ai} + \Delta x_{bn \to f}  
+\delta x = \delta x_{0 \to a_0} + \sum_{i=1}^{n-1} \Delta x_{b_i \to a_i} + \Delta x_{b_n \to f}  
 ```
 
 where $i \in \[1, n-1\]$ is simply a counter for all the tick ranges in between.
