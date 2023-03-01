@@ -56,7 +56,10 @@ M_{liq} \approx R(t - \Delta t) \cdot \bigg[ \frac{\mathrm{LTV}(t - \Delta t)}{\
 
 when assuming the collateral value in quote terms is approximately the same since the last funding update: $C(t) \approx C(t-\Delta t)$.
 
+
 ### Uniswap V3 Math
+
+#### TWAP
 
 The PAPR controller [uses](https://github.com/with-backed/papr/blob/master/src/UniswapOracleFundingRateController.sol#L144) the Uniswap V3
 geometric mean time-weighted average price over the time since the last call to `updateTarget()` as the mark price $M(t)$ in the target calculation
@@ -83,6 +86,15 @@ Inverting for the relative difference the attacker needs to attain in terms of t
 P_t = P_{t-\Delta t, t-\beta} \cdot \bigg(\frac{M(t)}{P_{t - \Delta t, t - \beta}} \bigg)^{\Delta t / \beta}
 ```
 
-Taking $M(t) = M_{liq}$ in this expression gives the spot price required to liquidate the PAPR vault.
+Taking $M(t) = M_{liq}$ in this expression gives the spot price required to liquidate the PAPR vault
+
+```math
+P_{liq} \approx P_{t-\Delta t, t-\beta} \cdot \bigg( \frac{R(t-\Delta t)}{P_{t-\Delta t, t-\beta}} \bigg)^{\Delta t / \beta} \cdot \bigg[ \frac{\mathrm{LTV}(t - \Delta t)}{\mathrm{LTV}_{max}} \bigg]^{F/\beta}
+```
+
+Notice the spot liquidation price has dependence on the LTV ratio to the power of $F / \beta$, which is great from a manipulation standpoint
+as the PAPR controller can tune $F$ to as large as necessary to reduce manipulability (but the tradeoff is less sensitivity for changes in funding).
+
+#### Liquidity
 
 
