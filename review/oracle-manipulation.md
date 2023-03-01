@@ -158,10 +158,9 @@ full price range, V2 requires an infinite amount of capital to reach the minimum
 
 With regard to the oracle manipulation attack above, the finite capital required to reach a price of effectively zero on Uni V3 means that
 the attacker does not necessarily have to worry about selling through intermediate liquidity in ranges up to $p_f$ *if* the liquidity LPs
-are providing ends prior to $p_f$. Meaning, even if $P_liq$ required to liquidate on PAPR is near zero (robust from PAPR mechanism standpoint),
-the actual capital to get there could be significantly less than anticipated when referencing Uni V2 as the liquidity profile on the V3
-PAPR pool could end (i.e. no more liquidity) far higher than the liquidation spot price the attacker needs to reach. This effectively
-*increases* the liquidation price the attacker needs to sell into to
+are providing ends prior to $p_f$. Meaning, even if $P_{liq}$ required to liquidate on PAPR is near zero (robust from PAPR mechanism standpoint),
+the actual capital to get there could be significantly less than anticipated as the liquidity profile on the V3 PAPR pool could end far higher
+than the liquidation spot price the attacker needs to reach. This effectively *increases* the liquidation price the attacker needs to reach to
 
 ```math
 P'_{liq} = \max (P_{liq}, p_{l})
