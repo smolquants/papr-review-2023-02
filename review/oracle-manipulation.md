@@ -94,6 +94,12 @@ P_{liq} \approx P_{t-\Delta t, t-\beta} \cdot \bigg( \frac{R(t-\Delta t)}{P_{t-\
 
 Notice the spot liquidation price has dependence on the LTV ratio to the power of $F / \beta$, which is great from a manipulation standpoint
 as the PAPR controller can tune $F$ to as large as necessary to reduce manipulability (but the tradeoff is less sensitivity for changes in funding).
+One does, however, need to worry about the ratio of target to prior TWAP value being raised to $\Delta t / \beta$, since as $\Delta t \to F$ in
+cases when `target > mark`, the liquidation spot price becomes less extreme for the manipulator.
+
+To avoid the latter issues, would consider making cron-like calls to the PAPR controller's `updateTarget()` function to keep $\delta t$ relatively small
+for target adjustments -- this issue is due to the fact that the PAPR controller update process is *separate* from the Uni V3 TWAP update
+process (i.e. can't get triggered when users swap on Uniswap and move the mark).
 
 
 ### Uniswap V3 Liquidity Math
@@ -107,5 +113,8 @@ to enable liquidity provision over a finite price range chosen by the LP. The re
 
 where $x_v = x + \frac{L}{\sqrt{p_b}}$, $y_v = y + L \sqrt{p_a}$ are the virtual reserves (following the original V2 invariant) at the
 current price $P = \frac{y_v}{x_v}$. V3 reduces to V2 for an LP range covering the entire price range: i.e. $p_a \to 0$, $p_b \to \infty$.
+
+Goal for the attacker is to calculate the amount of capital $\Delta x$ (i.e. quantity of PAPR token) they need to send to the pool in order to
+move the price below $P_{liq}$, where $\Delta x$ can be minted via an overcollateralized loan from PAPR.
 
 
