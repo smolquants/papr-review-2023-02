@@ -13,6 +13,8 @@ allowed by the protocol, enabling liquidation of the vault. As the controller co
 all debt *in PAPR terms* and uses the *target price* (i.e. internal controller price for the PAPR token) to
 convert from quote to PAPR terms when calculating collateral value backing the loan.
 
+### PAPR Math
+
 Specifically, the PAPR vault verifies whether a vault is liquidatable prior to triggering the liquidation auction.
 The [liquidation condition](https://github.com/with-backed/papr/blob/master/src/PaprController.sol#L337)
 checks whether the debt in PAPR terms (static) exceeds the max debt allowed for the vault
@@ -57,9 +59,7 @@ M_{liq} \approx R(t - \Delta t) \cdot \bigg[ \frac{\mathrm{LTV}(t - \Delta t)}{\
 when assuming the collateral value in quote terms is approximately the same since the last funding update: $C(t) \approx C(t-\Delta t)$.
 
 
-### Uniswap V3 Math
-
-#### TWAP
+### Uniswap V3 TWAP Math
 
 The PAPR controller [uses](https://github.com/with-backed/papr/blob/master/src/UniswapOracleFundingRateController.sol#L144) the Uniswap V3
 geometric mean time-weighted average price over the time since the last call to `updateTarget()` as the mark price $M(t)$ in the target calculation
@@ -95,6 +95,17 @@ P_{liq} \approx P_{t-\Delta t, t-\beta} \cdot \bigg( \frac{R(t-\Delta t)}{P_{t-\
 Notice the spot liquidation price has dependence on the LTV ratio to the power of $F / \beta$, which is great from a manipulation standpoint
 as the PAPR controller can tune $F$ to as large as necessary to reduce manipulability (but the tradeoff is less sensitivity for changes in funding).
 
-#### Liquidity
+
+### Uniswap V3 Liquidity Math
+
+Between ticks [Uni V3](https://uniswap.org/whitepaper-v3.pdf) obeys the $x \cdot y = L^2$ invariant, but introduces the concept of virtual liquidity
+to enable liquidity provision over a finite price range chosen by the LP. The real reserves $(x, y)$ within a given price range $[p_a, p_b]$ follow
+
+```math
+(x + \frac{L}{\sqrt{p_b}}) \cdot (y + L \sqrt{p_a}) = L^2
+```
+
+where $x_v = x + \frac{L}{\sqrt{p_b}}$, $y_v = y + L \sqrt{p_a}$ are the virtual reserves (following the original V2 invariant) at the
+current price $P = \frac{y_v}{x_v}$. V3 reduces to V2 for an LP range covering the entire price range: i.e. $p_a \to 0$, $p_b \to \infty$.
 
 
