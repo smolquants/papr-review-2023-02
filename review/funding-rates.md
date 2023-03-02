@@ -15,19 +15,38 @@ playing the basis trade on a hypothetical perpetual market for that same NFT col
 
 ## No-Arbitrage Funding Rates
 
-Should consider making the numeraire (i.e. quote token) wstETH such that each Uniswap pool querying mark from
-has pairing wstETH vs PAPR, otherwise likely encounter similar issues to [RAI](https://community.reflexer.finance/t/can-oracles-double-as-co-stakers-how-rai-like-systems-might-safely-support-staked-eth/397).
+PAPR currently uses ETH as the quote token when targeting rate adjustments via the paprMEME controller. Given PAPR uses
+similar rate adjustment mechanisms as RAI (i.e. funding payments based on difference in mark and target prices only),
+the protocol is likely to encounter the same [issues RAI is experiencing](https://community.reflexer.finance/t/can-oracles-double-as-co-stakers-how-rai-like-systems-might-safely-support-staked-eth/397)
+when viewed from the perspective of lost yield for ETH stakers.
 
-Using wstETH as the quote in adjusting PAPR token targets would effectively have the funding rate mechanism on PAPR represent solely
-the appetite for leverage against collateral types supported by PAPR. This is analogous to the "premium" component of the funding
-rate on e.g. BitMEX perps. Bringing in wstETH as the quote to adjust targets against would be analogous to including the "interest rate"
-component of the BitMEX funding rate, assuming for the ETH economy that staked ETH yields (consensus portion) represent the "risk-free"
-rate (or as close as we'll get to one).
+The goal with the funding rate mechanism
+
+```
+newTarget = oldTarget * (target/mark) ** (secondsSinceLastInterestCharge / fundingPeriod)     
+```
+
+is to have the market assess the appropriate interest rate on PAPR loans, adjusting the protocol's internal target
+rate accordingly to counterbalance excessive market supply or demand for loans. Ideally, this funding rate
+reflects the appetite for leverage against collateral types supported by the associated PAPR vaults. However,
+by not including the interest rate users can get elsewhere on the quote currency (i.e. ETH), the funding rate
+won't actually represent the appetite for leverage against PAPR collateral.
+
+To understand why, it helps to reference the analogous BitMEX perp funding rate expression, which includes an "interest rate"
+component (what's missing from above) and a "premium" component (what's above). The interest rate component adjusts for
+the opportunity cost lost by ETH arbitraguers in interacting with the protocol, given they need to compete with
+the staked ETH rate.
+
+Using a non-rebasing LSD such as wstETH as the quote in adjusting PAPR token targets would effectively have the funding rate mechanism on PAPR
+represent solely the appetite for leverage against collateral types supported by PAPR. As bringing in a non-rebasing LSD like wstETH as the quote
+to adjust targets against would be analogous to including the "interest rate" component of the BitMEX funding rate, assuming for the ETH economy
+that staked ETH yields (consensus portion) represent the "risk-free" rate (or as close as we'll get to one). The remaining adjustments to the target
+*with the ETH LSD as quote* then represent the "premium" component of the funding rate -- or simply the appetite for leverage against PAPR collateral.
 
 ### ETH Collateral
 
-Another way to look at this is from no-arbitrage arguments, using the super simplified case of using ETH as the collateral
-users are borrowing PAPR against (i.e. replicating RAI). By no-arbitrage / [interest rate parity](https://en.wikipedia.org/wiki/Interest_rate_parity),
+Another way to look at this is from no-arbitrage arguments (the ETH arbitrageurs mentioned above), using the super simplified case of ETH as
+the collateral users are borrowing PAPR against (i.e. replicating RAI). By no-arbitrage / [interest rate parity](https://en.wikipedia.org/wiki/Interest_rate_parity),
 I could:
 
 - Take out a loan by minting PAPR against my ETH
