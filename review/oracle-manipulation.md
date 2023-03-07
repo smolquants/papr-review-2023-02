@@ -164,7 +164,7 @@ From a manipulation standpoint, the [downside to Uni V3 v.s. V2](https://cmichel
 is it can take a *finite* amount of capital to reach the minimum tick range for the pool (i.e. go to effectively 0), depending on
 the existing liquidity distribution of the pool. Whereas V2 forces liquidity to be spread across the entire price range, V3 with
 concentrated liquidity does *not* enforce this, although allows for it if an LP desires. By enforcing provision of liquidity over the
-full price range, V2 requires an infinite amount of capital to reach the minimum tick range for the pool.
+full price range, V2 requires an infinite amount of capital to reach a price of zero for the pool.
 
 With regard to the oracle manipulation attack above, the finite capital required to reach a price of effectively zero on Uni V3 means that
 the attacker does not necessarily have to worry about selling through intermediate liquidity in ranges down to $p_f$ *if* the liquidity LPs
@@ -179,7 +179,7 @@ P'_{liq} = \max (P_{liq}, p_{l})
 where $p_l$ is the lowest price at which LPs are currently providing liquidity on the V3 pool, as long as $P_{liq}$ from papr is within
 the price range supported by Uni V3 (i.e. above the min tick). As once $p_l$ is passed, the pool moves to the [tick range min](https://github.com/Uniswap/v3-core/blob/main/contracts/UniswapV3Pool.sol#L656).
 LPs for the PAPR pool should consider replicating the robustness (to manipulation) of V2 by providing liquidity over the full tick range,
-which forces the capital requirements for manipulating the pool to the min tick range to be infinite.
+which forces the capital requirements for manipulating the pool to a price of zero to be infinite.
 
 
 ### Some Numbers
