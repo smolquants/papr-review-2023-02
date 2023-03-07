@@ -41,7 +41,7 @@ lost yield with a higher yield on the loan principle itself. So really should ex
 0 = -r + LTV * (r - f)
 ```
 
-or
+to first-order or
 
 ```
 f = r * (1 - 1 / LTV) 
@@ -64,7 +64,7 @@ collateral locked in papr vaults. No arb strategy would be:
 - Sell paprNFT for ETH on secondary
 - Stake ETH to earn "risk-free" rate
 
-The yield for this strategy relative to the risk free ETH rate is:
+The yield for this strategy relative to the risk free ETH rate is to first-order:
 
 ```
 y = (-r + f_perp) + LTV * (r - f_papr)
