@@ -1,6 +1,6 @@
 # papr-review-2023-02
 
-Economic review of [PAPR](https://papr.wtf).
+Economic review of [papr](https://papr.wtf).
 
 See [`review/`](./review/) for the full review.
 
