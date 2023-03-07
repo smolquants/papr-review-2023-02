@@ -200,7 +200,7 @@ on the target-to-mark ratio.
 While this is a good thing in terms of the attack not being possible within a "reasonable" timeframe, it's not great that the inability to
 perform the attack rests on an implementation detail for the Uniswap pool. Particularly, since it would be relatively cheap for the attacker
 to push the price down to the minimum tick as the minimum price with liquidity on the pool $p_l$ is only 0.3329 ETH/PAPR and the pool
-has a TVL of only $55.363k. An [oracle manipulation notebook](../notebook/oracle-manipulation.ipynb) is provided that can be rerun for
+has a TVL of only $55.363K. An [oracle manipulation notebook](../notebook/oracle-manipulation.ipynb) is provided that can be rerun for
 up to date numbers.
 
 The cap $B^{+}_{R/M}$ on the target-to-mark ratio does a very good job at eliminating the viablity of this manipulation attack
