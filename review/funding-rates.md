@@ -4,64 +4,37 @@ Funding rate mechanism analysis.
 
 ## TL;DR
 
-- Using ETH as the quote token for a given PAPR vault setup causes similar issues to what RAI is currently experiencing
-- Meaning, from no arbitrage / interest rate parity arguments, should expect the funding rate on the associated PAPR vault
-to likely trend negative as the "risk-free" rate the vault needs to compete with (and compare to) is the ETH staking rate
-- Consider using wstETH or one of the other non-rebase LSDs as the quote token to target PAPR rates against. This would make PAPR funding rates
-reflect the actual "premium" component (i.e. mark vs target price), since the "interest rate" component is built into the LSD token itself
-- Interestingly, a simple replication strategy shows passively holding the PAPR token for an NFT collection appears equivalent to
-playing the basis trade on a hypothetical perpetual market for that same NFT collection.
+- papr should be aware of the issues RAI is currently experiencing, given papr uses similar funding rate mechanisms
+- Meaning, from no arbitrage / interest rate parity arguments, should expect the funding rate on a hypothetical ETH-backed
+papr vault to likely trend negative as the "risk-free" rate the vault needs to compete with (and compare to) is the ETH staking rate
+- The example of an unstaked ETH-backed papr vault gives a framework for analyzing all papr vaults: i.e. no-arbitrage arguments for what
+to expect the funding rate should trend toward
+- Interestingly, a simple replication strategy shows passively holding the papr token for a particular NFT collection appears equivalent to
+playing the basis trade on a hypothetical perpetual market on that same NFT collection.
 
 
 ## No-Arbitrage Funding Rates
 
-PAPR currently uses ETH as the quote token when targeting rate adjustments via the paprMEME controller. Given PAPR uses
-similar rate adjustment mechanisms as RAI (i.e. funding payments based on difference in mark and target prices only),
-the protocol is likely to encounter the same [issues RAI is experiencing](https://community.reflexer.finance/t/can-oracles-double-as-co-stakers-how-rai-like-systems-might-safely-support-staked-eth/397)
-when viewed from the perspective of lost yield for ETH stakers.
-
-The goal with the funding rate mechanism
-
-```
-newTarget = oldTarget * (target/mark) ** (secondsSinceLastInterestCharge / fundingPeriod)     
-```
-
-is to have the market assess the appropriate interest rate on PAPR loans, adjusting the protocol's internal target
-rate accordingly to counterbalance excessive market supply or demand for loans. Ideally, this funding rate
-reflects the appetite for leverage against collateral types supported by the associated PAPR vaults. However,
-by not including the interest rate users can get elsewhere on the quote currency (i.e. ETH), the funding rate
-won't actually represent the appetite for leverage against PAPR collateral.
-
-To understand why, it helps to reference the analogous BitMEX perp funding rate expression, which includes an "interest rate"
-component (what's missing from above) and a "premium" component (what's above). The interest rate component adjusts for
-the opportunity cost lost by ETH arbitraguers in interacting with the protocol, given they need to compete with
-the staked ETH rate.
-
-Using a non-rebasing LSD such as wstETH as the quote in adjusting PAPR token targets would effectively have the funding rate mechanism on PAPR
-represent solely the appetite for leverage against collateral types supported by PAPR. As bringing in a non-rebasing LSD like wstETH as the quote
-to adjust targets against would be analogous to including the "interest rate" component of the BitMEX funding rate, assuming for the ETH economy
-that staked ETH yields (consensus portion) represent the "risk-free" rate (or as close as we'll get to one). The remaining adjustments to the target
-*with the ETH LSD as quote* then represent the "premium" component of the funding rate -- or simply the appetite for leverage against PAPR collateral.
-
 ### ETH Collateral
 
-Another way to look at this is from no-arbitrage arguments (the ETH arbitrageurs mentioned above), using the super simplified case of ETH as
-the collateral users are borrowing PAPR against (i.e. replicating RAI). By no-arbitrage / [interest rate parity](https://en.wikipedia.org/wiki/Interest_rate_parity),
-I could:
+One way to look at the papr funding rate mechanism (and expectations for what the rate might be) would be to apply no-arbitrage arguments to the system.
+Take the super simplified case of ETH as the collateral users are borrowing papr against (i.e. replicating RAI).
+By no-arbitrage / [interest rate parity](https://en.wikipedia.org/wiki/Interest_rate_parity), I could:
 
-- Take out a loan by minting PAPR against my ETH
-- Sell the PAPR for ETH on secondary (ignore slippage and trading fees)
+- Take out a loan by minting paprETH against my ETH
+- Sell the paprETH for ETH on secondary (ignore slippage and trading fees)
 - Stake the ETH to earn the "risk-free" rate
 
 The yield on the *loan principle* for this strategy would be approximately the ETH staking rate minus the funding rate needed
-to pay PAPR holders for the loan. But this strategy would represent earning a risk-free premium on top of the ETH staking rate
-if PAPR funding != risk free rate (ignoring liquidations and collateral). So by no arb arguments, IF you ignore the capital locked
-up in the vault to mint the loan, would expect the PAPR funding rate to be equal to the ETH staking rate on this vault.
+to pay papr holders for the loan. But this strategy would represent earning a risk-free premium on top of the ETH staking rate
+if papr funding != risk free rate (ignoring liquidations and collateral). So by no arb arguments, IF you ignore the capital locked
+up in the vault to mint the loan, would expect the papr funding rate to be equal to the ETH staking rate on this vault.
 
-*However*, as mentioned above, this completely ignores the ETH required to back the PAPR loan (overcollateralized). These same
+*However*, as mentioned above, this completely ignores the ETH required to back the papr loan (overcollateralized). These same
 borrowers employing this no-arb strategy are comparing all of their ETH capital locked up in this strategy relative to the same
-amount of ETH capital simply staked earning the protocol risk-free rate. So when employing the PAPR no-arb strategy, they're really
-*losing* yield from the ETH staking rate `r` on the capital needed to back the PAPR loan, and therefore need to compensate for that
+amount of ETH capital simply staked earning the protocol risk-free rate, assuming for the ETH economy that staked ETH yields (consensus portion)
+represent the "risk-free" rate (or as close as we'll get to one). So when employing the papr no-arb strategy, they're really
+*losing* yield from the ETH staking rate `r` on the capital needed to back the papr loan, and therefore need to compensate for that
 lost yield with a higher yield on the loan principle itself. So really should expect the no-arb funding rate `f` to be satisfied by
 
 ```
@@ -75,23 +48,23 @@ f = r * (1 - 1 / LTV)
 ```
 
 where the overcollateralization ratio `LTV` really hurts here -- borrowers need to overcompensate for the lost risk free rate on the
-ETH collateral used to back the loan, which means one should anticipate the funding rate to be persistently negative on ETH backed PAPR
-as `LTV < 1`. In the PAPR case, implies `mark > target` consistently, which is bad for PAPR token holders; i.e. not enough demand for leverage
+ETH collateral used to back the loan, which means one should anticipate the funding rate to be persistently negative on ETH-backed papr
+as `LTV < 1`. In the papr case, implies `mark > target` consistently, which is bad for papr token holders; i.e. not enough demand for leverage
 given the interest rate parity arguments above.
 
 ### NFT collateral
 
-You can apply the same logic to the PAPR token loans backed by NFT collateral to find a similar strategy that gives a rough estimate for
-the no-arb funding rate IF you assume the existence of an NFT perpetual that users of PAPR can short to hedge their exposure to the NFT
-collateral locked in PAPR vaults. No arb strategy would be:
+You can apply the same logic to the papr token loans backed by NFT collateral to find a similar strategy that gives a rough estimate for
+the no-arb funding rate IF you assume the existence of an NFT perpetual that users of papr can short to hedge their exposure to the NFT
+collateral locked in papr vaults. No arb strategy would be:
 
 - Buy the NFT collateral with your ETH
 - Sell the perp on the collateral to hedge NFT exposure
-- Mint PAPR using NFT collateral
-- Sell PAPR for ETH on secondary
+- Mint paprNFT using NFT collateral
+- Sell paprNFT for ETH on secondary
 - Stake ETH to earn "risk-free" rate
 
-The yield for this strategy *relative to the risk free ETH rate* is:
+The yield for this strategy relative to the risk free ETH rate is:
 
 ```
 y = (-r + f_perp) + LTV * (r - f_papr)
@@ -99,7 +72,7 @@ y = (-r + f_perp) + LTV * (r - f_papr)
 
 where `f_perp > 0` would mean getting paid funding to short the perp.
 
-No arb means this `y` should go to zero over time, so would expect the PAPR funding rate to be
+No arb means this `y` should go to zero over time, so would expect the NFT-backed papr funding rate to be
 
 ```
 f_papr = f_perp / LTV + r * (1 - 1/LTV)
@@ -107,14 +80,10 @@ f_papr = f_perp / LTV + r * (1 - 1/LTV)
 
 This is only > 0 if the hypothetical `f_perp` funding rate short hedge is getting paid out greater than `r * (1 - LTV)`. I would expect this to be
 the case most of the time, particularly in a bull market, but when everyone's bearish NFTs (or mildly bearish/complacent for that matter), this def
-won't be. Which means PAPR holders backed by these NFTs should expect negative funding rates in these scenarios and are less likely to hold their PAPR
+won't be. Which means papr holders backed by these NFTs should expect negative funding rates in these scenarios and are less likely to hold their papr
 tokens.
 
-This is essentially the same reason (but for NFT collateral) to consider adding the "interest rate" premium into the PAPR mechanism funding rate by
-using wstETH or one of its non-rebase LSD equivalents as the quote token in the underlying PAPR liquidity pool on Uniswap, as the funding rate would then
-implicitly incorporate the risk free rate in the no arb strategy above.
-
-Notice, if `f_perp` also incorporates the interest rate component, then when using the LSD, should expect PAPR funding rates to
+Notice, if `f_perp` also incorporates the interest rate component, then when using an LSD as the quote for targeting, should expect papr funding rates to
 be the funding rate on the perp adjusted for risk-free (i.e. appetite for NFT leverage thru the perp) divided by `LTV`,
 since the no arb strategy would produce
 
@@ -123,9 +92,9 @@ f'_papr = (f_perp - r) / LTV
         = f'_perp / LTV
 ```
 
-where `f = f' + r` in both PAPR and perp cases. `f'` can be interpreted as the mark "premium" component of the funding rate and `r` the interest
-rate component when using the BitMEX analogy.
+where `f = f' + r` in both papr and perp cases. `f'` can be interpreted as the mark "premium" component of the funding rate and `r` the "interest rate"
+component when using the BitMEX analogy.
 
-Interestingly, passively holding the PAPR token for an NFT collection appears equivalent to playing the basis trade on a hypothetical perp (i.e. NFT/ETH perp market)
-for that same NFT collection, through the replication strategy above. Therefore, price appreciation on the respective PAPR token should produce
+Interestingly, passively holding the papr token for an NFT collection appears equivalent to playing the basis trade on a hypothetical perp (i.e. NFT/ETH perp market)
+for that same NFT collection, through the replication strategy above. Therefore, price appreciation on the respective papr token should produce
 similar returns to that of the basis trade on a hypothetical NFT perp.
