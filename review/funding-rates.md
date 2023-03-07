@@ -19,7 +19,7 @@ playing the basis trade on a hypothetical perpetual market on that same NFT coll
 ### ETH Collateral
 
 One way to look at the papr funding rate mechanism (and expectations for what the rate might be) would be to apply no-arbitrage arguments to the system.
-Take the super simplified case of ETH as the collateral users are borrowing papr against (i.e. replicating RAI).
+Take the super simplified case of ETH as the collateral users are borrowing PAPR against (i.e. replicating RAI).
 By no-arbitrage / [interest rate parity](https://en.wikipedia.org/wiki/Interest_rate_parity), I could:
 
 - Take out a loan by minting paprETH against my ETH
@@ -84,8 +84,8 @@ the case most of the time, particularly in a bull market, but when everyone's be
 won't be. Which means papr holders backed by these NFTs should expect negative funding rates in these scenarios and are less likely to hold their papr
 tokens.
 
-Notice, if `f_perp` also incorporates the interest rate component, then when using an LSD as the quote for targeting, should expect papr funding rates to
-be the funding rate on the perp adjusted for risk-free (i.e. appetite for NFT leverage thru the perp) divided by `LTV`,
+Notice, if `f_perp` also incorporates the interest rate component, then when using a non-rebasing LSD as the quote for targeting (instead of ETH),
+should expect papr funding rates to be the funding rate on the perp adjusted for risk-free (i.e. appetite for NFT leverage thru the perp) divided by `LTV`,
 since the no arb strategy would produce
 
 ```
@@ -94,7 +94,7 @@ f'_papr = (f_perp - r) / LTV
 ```
 
 where `f = f' + r` in both papr and perp cases. `f'` can be interpreted as the mark "premium" component of the funding rate and `r` the "interest rate"
-component when using the BitMEX analogy.
+component when using the [BitMEX analogy](https://www.bitmex.com/app/perpetualContractsGuide#Funding-Rate-Calculations).
 
 Interestingly, passively holding the papr token for an NFT collection appears equivalent to playing the basis trade on a hypothetical perp (i.e. NFT/ETH perp market)
 for that same NFT collection, through the replication strategy above. Therefore, price appreciation on the respective papr token should produce
