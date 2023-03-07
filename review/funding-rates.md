@@ -4,7 +4,8 @@ Funding rate mechanism analysis.
 
 ## TL;DR
 
-- papr should be aware of the issues RAI is currently experiencing, given papr uses similar funding rate mechanisms
+- papr should be aware of the issues [RAI is currently experiencing](https://community.reflexer.finance/t/can-oracles-double-as-co-stakers-how-rai-like-systems-might-safely-support-staked-eth/397),
+given papr uses similar funding rate mechanisms
 - Meaning, from no arbitrage / interest rate parity arguments, should expect the funding rate on a hypothetical ETH-backed
 papr vault to likely trend negative as the "risk-free" rate the vault needs to compete with (and compare to) is the ETH staking rate
 - The example of an unstaked ETH-backed papr vault gives a framework for analyzing all papr vaults: i.e. no-arbitrage arguments for what
