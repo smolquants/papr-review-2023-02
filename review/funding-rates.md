@@ -100,3 +100,15 @@ component when using the [BitMEX analogy](https://www.bitmex.com/app/perpetualCo
 Interestingly, passively holding the papr token for an NFT collection appears equivalent to playing the basis trade on a hypothetical perp (i.e. NFT/ETH perp market)
 for that same NFT collection, through the replication strategy above. Therefore, price appreciation on the respective papr token should produce
 similar returns to that of the basis trade on a hypothetical NFT perp.
+
+### Some Numbers
+
+Referencing info on 2023-03-15 from [papr.wtf](https://papr.wtf) and [Lido's Dune dashboard](https://dune.com/LidoAnalytical/lido-execution-layer-rewards):
+
+| ETH CL Staking Rate (APR) | paprMEME Funding Rate (APR) |
+| ------------------------- | --------------------------- |
+|     3.702 \%              |    - 11.1 \%                |
+
+
+
+
