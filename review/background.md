@@ -1,8 +1,27 @@
 # Background
 
-Background notes on [PAPR](https://papr.wtf).
+Background information on [PAPR](https://papr.wtf).
 
-## Summary
+
+## Overview
+
+Papr is a new NFT lending protocol that is designed to be versatile, durable, and used without any lockups. It was created by the Backed team and inspired
+by Squeeth. Papr introduces the “papr" tokens, which can be minted by borrowers who use their NFTs as collateral and send them to a papr controller smart
+contract. These papr tokens can be sold on a DEX such as Uniswap by borrowers. The continuous trading of these tokens helps establish a feedback loop
+between the papr trading price and the protocol's interest rates.
+
+Interest rates are programmatically updated on chain as a function of papr’s trading price on Uniswap (the lower the trading price, the higher the interest
+to borrowers), and interest rates in turn affect the trading price, as borrowers open and close loans in response to rates.
+
+Papr uses Uni V3 to facilitate swaps in and out of the papr token and as the oracle for Mark price in the protocol. The Backed team chose to use Uni V3 for
+three main reasons:
+
+1. Oracle Features
+2. Full range + specific range LP options
+3. Possibility for “lenders”/buyers to effectively set limit orders via single side LP’ing out of range
+
+
+## Our Understanding
 
 PAPR seems like a quanto version of RAI: three tokens involved in the loan.
   - Debt token: PAPR
