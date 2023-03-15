@@ -206,7 +206,26 @@ has a TVL of only $55.363K. An [oracle manipulation notebook](../notebook/oracle
 up to date numbers.
 
 The cap $B^{+}_{R/M}$ on the target-to-mark ratio does a very good job at eliminating the viablity of this manipulation attack
-for most "reasonable" time frames of $\Delta t$. For the current average LTV on PAPR at 90 day funding period, the attacker would have to
-wait $\Delta t \approx 44$ days for the manipulation to even become possible. Assuming the shortest funding period allowed of
-[28 days](https://github.com/with-backed/papr/blob/master/src/UniswapOracleFundingRateController.sol#L123), the attacker would
-need to wait at least $\Delta t \approx 14$ days.
+for most "reasonable" time frames of $\Delta t$. Returning to the target update equation, the cap will be reached when
+
+```math
+(B^{+}_{R/M})^{\Delta t / F} = \frac{R(t)}{R(t - \Delta t)}
+```
+
+But $\mathrm{LTV}(t) = R(t) \cdot D / C(t)$ implies
+
+```math
+\frac{R(t)}{R(t-\Delta t)} \approx \frac{\mathrm{LTV}(t)}{\mathrm{LTV}(t - \Delta t)}
+```
+
+when $C(t) \approx C(t-\Delta t)$. Solving for $\Delta t$, the time until the attack becomes viable is given approximately by
+
+```math
+\delta t \approx F \cdot \frac{\log \mathrm{LTV}_{max} - \log \mathrm{LTV}(t-\Delta t) }{\log B^{+}_{R/M}}
+```
+
+as the goal for the attacker is to reach an $\mathrm{LTV} \to \mathrm{LTV}_{max}$.
+
+For the current average LTV on PAPR at 90 day funding period, the attacker would have to wait $\Delta t \approx 44$ days for the manipulation
+to even become possible. Assuming the shortest funding period allowed of [28 days](https://github.com/with-backed/papr/blob/master/src/UniswapOracleFundingRateController.sol#L123),
+the attacker would need to wait at least $\Delta t \approx 14$ days.
