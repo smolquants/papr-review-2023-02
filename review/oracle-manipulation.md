@@ -221,7 +221,7 @@ But $\mathrm{LTV}(t) = R(t) \cdot D / C(t)$ implies
 when $C(t) \approx C(t-\Delta t)$. Solving for $\Delta t$, the time until the attack becomes viable is given approximately by
 
 ```math
-\Delta t \approx F \cdot \frac{\log \bigg(\mathrm{LTV}_{max}\bigg) - \log \bigg(\mathrm{LTV}(t-\Delta t)\bigg) }{\log \bigg(B^{+}_{R/M}\bigg)}
+\Delta t \approx F \cdot \frac{\log [\mathrm{LTV}_{max}] - \log [\mathrm{LTV}(t-\Delta t)] }{\log [B^{+}_{R/M}]}
 ```
 
 as the goal for the attacker is to reach an $\mathrm{LTV} \to \mathrm{LTV}_{max}$.
