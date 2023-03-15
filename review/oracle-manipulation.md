@@ -4,21 +4,23 @@ Oracle manipulation analysis.
 
 ## TL;DR
 
-- It is currently not possible within a "reasonable" timeframe to force a liquidation on the average paprMEME vault by manipulating the spot price on the paprMEME/WETH 1\% Uniswap V3 pool
+- It is currently not possible within a "reasonable" timeframe to force a liquidation auction on the average paprMEME vault by manipulating the spot price on the paprMEME/WETH 1\% Uniswap V3 pool
 - This is due to both the liquidation price being *outside* of the `MIN_TICK` price supported by the Uniswap pool implementation and the paprMEME `_targetMarkRatioMax` internal constant
 being set well. Given current numbers, the attacker would need to wait for an instance when the `updateTarget()` function hasn't been called in $\Delta t > 44$ days
+- Note that even if the attack were to be available, the attacker would still need to win the liquidation auction to make it worthwhile
 - Still, the amount of capital required to force the Uniswap pool to the `MIN_TICK` is finite given the lack of full-range liquidity provision in the pool
 - As backup protection against the extreme case where the cap can no longer protect paprMEME vaults from liquidation via manipulation, consider increasing the cost of attack to manipulate the underlying
 paprMEME/WETH pool by incentivizing liquidity provision across the full tick range
 - Should also consider making cron-like calls to the papr controller's `updateTarget()` function to keep $\Delta t$ relatively small, which helps eliminate the viability of this
-manipulation attack given the controller-imposed `_targetMarkRatioMax` cap.
+manipulation attack given the controller-imposed `_targetMarkRatioMax` cap
+
 
 ## Manipulating the Uniswap Pool to Trigger Liquidations
 
 The attack is relatively simple and straightforward. The goal is to move the mark price on the Uniswap pool
 enough to alter the papr controller target price such that the vault closest to liquidation gets pushed past the max LTV
 allowed by the protocol, enabling liquidation of the vault. As the controller considers
-all debt *in PAPR terms* and uses the *target price* (i.e. internal controller price for the PAPR token) to
+all debt in PAPR terms and uses the target price (i.e. internal controller price for the PAPR token) to
 convert from quote to PAPR terms when calculating collateral value backing the loan.
 
 ### papr Math
@@ -204,6 +206,10 @@ has a TVL of only $55.363K. An [oracle manipulation notebook](../notebook/oracle
 up to date numbers.
 
 The cap $B^{+}_{R/M}$ on the target-to-mark ratio does a very good job at eliminating the viablity of this manipulation attack
-for most "reasonable" time frames of $\Delta t$. For the current average LTV on PAPR, the attacker would have to wait $\Delta t \approx 44$ days
-for the manipulation to even become possible.
+for most "reasonable" time frames of $\Delta t$. For the current average LTV on PAPR at 90 day funding period, the attacker would have to
+wait $\Delta t \approx 44$ days for the manipulation to even become possible. Even assuming the shortest funding period allowed of
+[28 days](https://github.com/with-backed/papr/blob/master/src/UniswapOracleFundingRateController.sol#L123), the attacker would
+need to wait at least $\Delta t \approx 14$ days.
+
+
 
