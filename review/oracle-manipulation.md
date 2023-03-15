@@ -52,7 +52,7 @@ Therefore, the attacker's goal would be to force the controller to target $R(t) 
 worth significantly less in internal PAPR terms. To accomplish this, the attacker must sell PAPR into the pool so $M(t) \to 0$,
 which the controller will then attempt to counter with significantly higher targets. With the caveat that the papr controller
 imposes [bounds](https://github.com/with-backed/papr/blob/master/src/UniswapOracleFundingRateController.sol#L24) $B^{+}_{R/M}$ on the maximum
-target-to-mark ratio it will acknowledge as valid. Note, selling PAPR is a relatively simple task as one could mint PAPR by taking
+target-to-mark ratio it will acknowledge as valid. Selling PAPR is a relatively simple task as one could mint PAPR by taking
 out an overcollateralized loan from the protocol, then intentionally dump the PAPR on the Uniswap pool.
 
 Solving for the mark price that triggers a liquidation:
@@ -207,6 +207,6 @@ up to date numbers.
 
 The cap $B^{+}_{R/M}$ on the target-to-mark ratio does a very good job at eliminating the viablity of this manipulation attack
 for most "reasonable" time frames of $\Delta t$. For the current average LTV on PAPR at 90 day funding period, the attacker would have to
-wait $\Delta t \approx 44$ days for the manipulation to even become possible. Even assuming the shortest funding period allowed of
+wait $\Delta t \approx 44$ days for the manipulation to even become possible. Assuming the shortest funding period allowed of
 [28 days](https://github.com/with-backed/papr/blob/master/src/UniswapOracleFundingRateController.sol#L123), the attacker would
 need to wait at least $\Delta t \approx 14$ days.
