@@ -7,7 +7,8 @@ Funding rate mechanism analysis.
 - papr should be aware of the issues [RAI is currently experiencing](https://community.reflexer.finance/t/can-oracles-double-as-co-stakers-how-rai-like-systems-might-safely-support-staked-eth/397),
 given papr uses similar funding rate mechanisms
 - Meaning, from no arbitrage / interest rate parity arguments, should expect the funding rate on a hypothetical ETH-backed
-papr vault to likely trend negative as the "risk-free" rate the vault needs to compete with (and compare to) is the ETH staking rate
+papr vault to likely trend negative due to overcollateralization via *unstaked* ETH: i.e. there's an opportunity cost to using
+ETH to overcollateralize the loans as the vault collateral will not earn the "risk-free" ETH staking rate
 - The example of an unstaked ETH-backed papr vault gives a framework for analyzing all papr vaults: i.e. no-arbitrage arguments for what
 to expect the funding rate should trend toward
 - Interestingly, a simple replication strategy shows passively holding the papr token for a particular NFT collection appears equivalent to

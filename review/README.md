@@ -15,7 +15,7 @@ Background information summarizing our understanding of the core protocol is in 
 
 ## Approach
 
-Our approach to understanding papr, and specificially what each PAPR token represents from a financial perspective,
+Our approach to understanding papr, and specifically what each PAPR token represents from a financial perspective,
 was to examine the protocol under the context of no-arbitrage arguments. Meaning, take the perspective of an ETH
 native and assume these natives seek to earn returns on their ETH at or above the ETH staking rate: i.e. assume
 the ETH staking rate is the "risk-free" rate for the ETH economy. Then, we ask ourselves
