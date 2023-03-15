@@ -23,7 +23,7 @@ three main reasons:
 
 ## Our Understanding
 
-PAPR seems like a quanto version of RAI: three tokens involved in the loan.
+PAPR seems like a quanto version of [RAI](https://reflexer.finance/): three tokens involved in the loan.
   - Debt token: PAPR
   - Collateral token: NFT
   - Quote token: USDC or ETH
