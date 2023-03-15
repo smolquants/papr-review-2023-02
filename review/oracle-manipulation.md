@@ -7,7 +7,7 @@ Oracle manipulation analysis.
 - It is currently not possible within a "reasonable" timeframe to force a liquidation auction on the average paprMEME vault by manipulating the spot price on the paprMEME/WETH 1\% Uniswap V3 pool
 - This is due to both the liquidation price being *outside* of the `MIN_TICK` price supported by the Uniswap pool implementation and the paprMEME `_targetMarkRatioMax` internal constant
 being set well. Given current numbers, the attacker would need to wait for an instance when the `updateTarget()` function hasn't been called in $\Delta t > 44$ days
-- Note that even if the attack were to be available, the attacker would still need to win the liquidation auction to make it worthwhile
+- Note that even if the attack were available, the attacker would still need to win the liquidation auction to make it worthwhile
 - Still, the amount of capital required to force the Uniswap pool to the `MIN_TICK` is finite given the lack of full-range liquidity provision in the pool
 - As backup protection against the extreme case where the cap can no longer protect paprMEME vaults from liquidation via manipulation, consider increasing the cost of attack to manipulate the underlying
 paprMEME/WETH pool by incentivizing liquidity provision across the full tick range
@@ -210,6 +210,3 @@ for most "reasonable" time frames of $\Delta t$. For the current average LTV on 
 wait $\Delta t \approx 44$ days for the manipulation to even become possible. Even assuming the shortest funding period allowed of
 [28 days](https://github.com/with-backed/papr/blob/master/src/UniswapOracleFundingRateController.sol#L123), the attacker would
 need to wait at least $\Delta t \approx 14$ days.
-
-
-
