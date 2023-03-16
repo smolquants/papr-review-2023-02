@@ -105,10 +105,10 @@ similar returns to that of the basis trade on a hypothetical NFT perp.
 
 Referencing info on 2023-03-15 from [papr.wtf](https://papr.wtf) and [Lido's Dune dashboard](https://dune.com/LidoAnalytical/lido-execution-layer-rewards):
 
-| ETH CL Staking Rate (APR) | paprMEME Funding Rate (APR) |
-| ------------------------- | --------------------------- |
-|     3.702 \%              |    - 11.1 \%                |
+| ETH CL Staking Rate (APR) | paprMEME Funding Rate (APR) |     Avg LTV   |
+| ------------------------- | --------------------------- | ------------- |
+|     3.702 \%              |    - 13.42 \%               |     32.62 \%  |
 
-
-
-
+Would place the paprMEME funding rate adjusted for the "risk-free" rate (i.e. price for leverage)
+at $f'\_{papr} = - 17.122$\%. The associated hypothetical perpetual funding rate on the MEME NFT collection
+would then be $f'_{perp} = - 5.585$\%.
