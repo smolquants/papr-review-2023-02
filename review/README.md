@@ -2,7 +2,7 @@
 
 ## Intro
 
-Papr is an innovative protocol because it offers an avenue to access decentralized lending with illiquid collateral types, that likely
+Papr is an innovative protocol that offers an avenue to access decentralized lending with illiquid collateral types, that likely
 cannot be supported by existing lending protocols. If it scales successfully it means borrowers would be able to borrow against many more
 collateral types in a decentralized manner and lenders have a separate avenue to earn sustainable yield via simply holding various
 PAPR tokens.
